@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VAN-X AI | Personal</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,sans-serif}
+body{background:#000;color:#fff;min-height:100vh}
+.top{padding:15px;text-align:center;border-bottom:1px solid #00f0ff}
+.top h1{color:#00f0ff;font-size:24px;letter-spacing:2px}
+.top p{color:#aaa;font-size:12px;margin-top:5px}
+.hero{padding:40px 20px;text-align:center}
+.hero h2{font-size:32px;line-height:1.2}
+.hero h2 span{color:#00f0ff}
+.hero p{color:#ccc;margin:15px 0}
+.btn{background:#00f0ff;color:#000;border:none;padding:14px 28px;border-radius:30px;font-weight:bold;font-size:16px;cursor:pointer}
+.card{margin:20px;border:1px solid #333;padding:15px;border-radius:15px;background:#0a0a0a}
+.card h3{color:#00f0ff}
+/* Chat Button */
+#chatBtn{position:fixed;bottom:20px;right:20px;width:60px;height:60px;border-radius:50%;background:#00f0ff;border:none;font-size:28px;cursor:pointer;box-shadow:0 0 20px #00f0ff;z-index:999}
+#chatBox{position:fixed;bottom:90px;right:15px;left:15px;max-width:380px;margin-left:auto;background:#111;border:1px solid #00f0ff;border-radius:15px;display:none;flex-direction:column;overflow:hidden;z-index:999}
+#chatHead{background:#00f0ff;color:#000;padding:12px;font-weight:bold;display:flex;justify-content:space-between}
+#chatMsgs{height:280px;overflow-y:auto;padding:10px;display:flex;flex-direction:column;gap:8px}
+.msg{padding:8px 12px;border-radius:12px;max-width:85%;font-size:14px;line-height:1.4}
+.bot{background:#222;align-self:flex-start}
+.user{background:#00f0ff;color:#000;align-self:flex-end}
+#chatInputRow{display:flex;border-top:1px solid #333}
+#chatInputRow input{flex:1;padding:12px;background:#000;color:#fff;border:none;outline:none}
+#chatInputRow button{background:#00f0ff;border:none;padding:0 16px;font-weight:bold}
+#lock{position:fixed;inset:0;background:#000;display:flex;align-items:center;justify-content:center;z-index:1000;padding:20px}
+.lockBox{background:#111;border:1px solid #00f0ff;padding:25px;border-radius:15px;width:100%;max-width:320px;text-align:center}
+.lockBox input{width:100%;padding:12px;margin:12px 0;border-radius:8px;border:1px solid #333;background:#000;color:#fff;text-align:center}
+.lockBox button{width:100%;padding:12px;background:#00f0ff;border:none;border-radius:8px;font-weight:bold}
+</style>
+</head>
+<body>
+
+<div class="top">
+<h1>VAN-X AI</h1>
+<p>NEXUS CORE: ONLINE | PERSONAL USE ONLY</p>
+</div>
+
+<div class="hero">
+<h2>THE EFFICIENCY<br><span>NEXUS</span></h2>
+<p>AUTOMATE. INTEGRATE. ELEVATE.</p>
+<button class="btn" onclick="openChat()">▶️ VAN-X AI CHAT KHOLO</button>
+</div>
+
+<div class="card"><h3>🚀 DATA INTEGRATION</h3><p style="color:#aaa;margin-top:8px">Aapka Personal AI Assistant ab ready hai.</p></div>
+<div class="card"><h3>🎮 GAME</h3><p style="color:#aaa;margin-top:8px">Bot se likho - "game" toh Game ka link dega.</p></div>
+
+<!-- Lock Screen -->
+<div id="lock">
+<div class="lockBox">
+<h2 style="color:#00f0ff">VAN-X AI</h2>
+<p style="color:#aaa;font-size:13px;margin-top:5px">Personal Use Only - Password Daalo</p>
+<input type="password" id="pass" placeholder="Password likho">
+<button onclick="unlock()">UNLOCK 🔓</button>
+<p id="err" style="color:red;font-size:13px;margin-top:8px"></p>
+<p style="color:#555;font-size:11px;margin-top:10px">Default Password: manoj123</p>
+</div>
+</div>
+
+<!-- Chat -->
+<button id="chatBtn" onclick="toggleChat()">🤖</button>
+<div id="chatBox">
+<div id="chatHead"><span>🤖 VAN-X AI</span><span onclick="toggleChat()" style="cursor:pointer">✖</span></div>
+<div id="chatMsgs"></div>
+<div id="chatInputRow">
+<input id="userMsg" placeholder="Boss, kuch likho..." onkeypress="if(event.key==='Enter') sendMsg()">
+<button onclick="sendMsg()">SEND</button>
+</div>
+</div>
+
+<script>
+let myPass = "manoj123"; // Yaha apna password badal sakte ho
+
+function unlock(){
+  let p = document.getElementById("pass").value;
+  if(p === myPass){
+    document.getElementById("lock").style.display="none";
+    addMsg("Hello Boss Manoj! 🙏 Main VAN-X AI hu. Aapka Personal Assistant. Kya karna hai? Game khelna hai, ya Site ka kaam karna hai?", "bot");
+  } else {
+    document.getElementById("err").innerText = "Galat Password Boss! Dobara try karo.";
+  }
+}
+function openChat(){ document.getElementById("chatBox").style.display="flex"; }
+function toggleChat(){
+  let b = document.getElementById("chatBox");
+  b.style.display = (b.style.display==="flex" ? "none" : "flex");
+}
+function addMsg(t, who){
+  let d = document.createElement("div");
+  d.className = "msg " + who;
+  d.innerText = t;
+  document.getElementById("chatMsgs").appendChild(d);
+  document.getElementById("chatMsgs").scrollTop = 9999;
+}
+function sendMsg(){
+  let inp = document.getElementById("userMsg");
+  let txt = inp.value.trim();
+  if(!txt) return;
+  addMsg(txt, "user");
+  inp.value="";
+  setTimeout(()=>{ reply(txt.toLowerCase()); }, 500);
+}
+function reply(t){
+  let ans = "";
+  if(t.includes("hi") || t.includes("hello") || t.includes("hey")) ans = "Hello Boss! Kaise ho? Main VAN-X AI, aapka Personal Bot. Batao kya karu?";
+  else if(t.includes("game")) ans = "Game khelna hai Boss? 🎮 Aapke NEXUS Page me hi Game ka Button hai. Likho 'play' main Game khol dunga.";
+  else if(t.includes("play")) ans = "Chalo Boss, Game Mode ON! 🏎️💨 Aapki Racing Game jald hi yahi khulegi.";
+  else if(t.includes("kaun") || t.includes("naam")) ans = "Main VAN-X AI hu, sirf Manoj Boss ke liye banaya gaya Personal AI.";
+  else if(t.includes("time") || t.includes("samay")) ans = "Abhi ka Time hai: " + new Date().toLocaleTimeString("hi-IN");
+  else if(t.includes("date") || t.includes("tarikh")) ans = "Aaj ki Date hai: " + new Date().toLocaleDateString("hi-IN");
+  else if(t.includes("thank")) ans = "Welcome Boss! 🙏 Aapke liye toh kuch bhi.";
+  else if(t.includes("kya kar")) ans = "Main aapke liye Game, Site ka kaam, Time, Date sab bata sakta hu. Batao kya chahiye?";
+  else ans = "Samajh gaya Boss! '" + t + "' - Ye note kar liya maine. Aage se yaad rakhunga. Aur kuch chahiye?";
+  addMsg(ans, "bot");
+}
+</script>
+</body>
+  </html>
